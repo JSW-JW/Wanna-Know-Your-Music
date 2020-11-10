@@ -1,22 +1,24 @@
-package com.codingwithmitch.wanna_know_your_music.ui
+package com.vics.wanna_know_your_music.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.codingwithmitch.audiostreamer.R
+import com.vics.WannaKnowYourMusic.R
 
 
-class CategoryFragment : Fragment() {
+class HomeFragment : Fragment() {
 
     companion object {
-        private const val TAG = "CategoryFragment"
+        private const val TAG = "HomeFragment"
     }
 
     // UI Components
 
+
     // Vars
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

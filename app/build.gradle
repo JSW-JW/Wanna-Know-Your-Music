@@ -10,7 +10,7 @@ android {
     buildToolsVersion "30.0.1"
 
     defaultConfig {
-        applicationId "com.codingwithmitch.wanna_know_your_music"
+        applicationId "com.vics.wanna_know_your_music"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
