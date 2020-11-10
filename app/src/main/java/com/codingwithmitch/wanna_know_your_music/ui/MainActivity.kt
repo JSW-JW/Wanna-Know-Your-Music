@@ -1,4 +1,4 @@
-package com.codingwithmitch.wanna_know_your_music
+package com.codingwithmitch.wanna_know_your_music.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

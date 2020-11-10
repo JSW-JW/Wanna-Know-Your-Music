@@ -1,4 +1,4 @@
-package com.codingwithmitch.wanna_know_your_music
+package com.codingwithmitch.wanna_know_your_music.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
