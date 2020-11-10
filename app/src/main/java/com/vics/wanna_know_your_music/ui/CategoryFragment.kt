@@ -22,7 +22,7 @@ class CategoryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        return inflater.inflate(R.layout.fragment_home, container, false)  // 3 Fragment use the same 'fragment_home' layout. But name each of them differently for clarification.
     }
 
 }
