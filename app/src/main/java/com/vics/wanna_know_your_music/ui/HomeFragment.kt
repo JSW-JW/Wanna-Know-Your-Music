@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.dynamic.SupportFragmentWrapper
 import com.google.api.LogDescriptor
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -41,7 +42,7 @@ class HomeFragment : Fragment(), HomeRecyclerAdapter.IHomeSelector {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        initRecyclerView()
+        initRecyclerView(view)
         Log.d(TAG, "onViewCreated: here")
     }
 
@@ -68,11 +69,11 @@ class HomeFragment : Fragment(), HomeRecyclerAdapter.IHomeSelector {
         }
     }
 
-    fun instance(): HomeFragment {
+    fun newInstance(): HomeFragment {
         return HomeFragment()
     }
 
-    private fun initRecyclerView() {
+    private fun initRecyclerView(view: View) {
         if (mRecyclerView == null) {
             Log.d(TAG, "initRecyclerView: here")
             mRecyclerView = view?.findViewById(R.id.recycler_view)
@@ -85,6 +86,7 @@ class HomeFragment : Fragment(), HomeRecyclerAdapter.IHomeSelector {
 
     override fun onCategorySelected(position: Int) {
         Log.d(TAG, "onCategorySelected: Category list item is clicked.")
+
     }
 
     override fun onAttach(context: Context) {
