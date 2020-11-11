@@ -9,7 +9,7 @@
 
 
     <!-- Firestore collections -->
-    <string name="collection_audio">Audio</string>
+    <string name="collection_audio">"Audio"</string>
     <string name="collection_music">Music</string>
     <string name="collection_podcasts">Podcasts</string>
     <string name="collection_content">Content</string>

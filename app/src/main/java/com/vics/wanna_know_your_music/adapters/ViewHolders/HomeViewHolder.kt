@@ -16,7 +16,7 @@ class HomeViewHolder(
     itemView: View,
     homeSelector: HomeRecyclerAdapter.IHomeSelector,
     val context: Context,
-    val category: String
+    val categories: ArrayList<String>
 ) : RecyclerView.ViewHolder(itemView) {
 
     private val  categoryText : TextView = itemView.findViewById(R.id.category_title)
@@ -30,11 +30,11 @@ class HomeViewHolder(
     }
 
     fun bind() {
-        categoryText.text = category
+        categoryText.text = categories[adapterPosition]
         val options: RequestOptions = RequestOptions()
             .error(R.drawable.ic_launcher_background)
         var iconResource: Drawable? = null
-        when (category) {
+        when (categories[adapterPosition]) {
             "Music" -> {
                 iconResource =
                     ContextCompat.getDrawable(context, R.drawable.ic_audiotrack_white_24dp)
