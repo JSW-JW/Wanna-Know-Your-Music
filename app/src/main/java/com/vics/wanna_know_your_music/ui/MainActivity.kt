@@ -69,6 +69,19 @@ class MainActivity : AppCompatActivity(), IMainActivity, ICategorySelector {
         }
     }
 
+    override fun onBackPressed() {
+        val fragments: ArrayList<Fragment> = MainActivityFragmentManager.instance!!.fragments
+        if(fragments.size > 1) {
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.remove(fragments[fragments.size - 1])
+            transaction.commit()
+
+            MainActivityFragmentManager.instance!!.removeFragment(fragments.size - 1)
+            showFragment(fragments[fragments.size - 2], true)
+        }
+        super.onBackPressed()
+    }
+
     override fun hideProgressBar() {
         progress_bar.visibility = View.GONE
     }
