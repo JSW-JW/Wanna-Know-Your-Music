@@ -20,6 +20,14 @@
             </intent-filter>
         </activity>
 
+        <service android:name="com.vics.wanna_know_your_music.services.MediaService">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </service>
+
     </application>
+
+
 
 </manifest>
