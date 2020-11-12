@@ -13,7 +13,7 @@ import com.vics.wanna_know_your_music.util.MainActivityFragmentManager
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity(), IMainActivity, ICategorySelector {
+class MainActivity : AppCompatActivity(), IMainActivity {
 
     private val TAG = "MainActivity"
 
@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity(), IMainActivity, ICategorySelector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
+        loadFragment(HomeFragment().newInstance(), true)
     }
 
     private fun loadFragment(fragment: Fragment, lateralMovement: Boolean) {
@@ -36,12 +36,15 @@ class MainActivity : AppCompatActivity(), IMainActivity, ICategorySelector {
             tag = getString(R.string.fragment_home)
         } else if (fragment is CategoryFragment) {
             tag = getString(R.string.fragment_category)
+            transaction.addToBackStack(tag)
         } else if (fragment is PlaylistFragment) {
             tag = getString(R.string.fragment_playlist)
+            transaction.addToBackStack(tag)
         }
 
         transaction.add(R.id.main_container, fragment, tag)
         transaction.commit()
+        Log.d(TAG, "loadFragment: $tag")
 
         MainActivityFragmentManager.instance!!.addFragment(fragment)
 
@@ -58,9 +61,12 @@ class MainActivity : AppCompatActivity(), IMainActivity, ICategorySelector {
         transaction.show(fragment)  // let the fragment which exists to be at the front
         transaction.commit()
 
-        for(f: Fragment in MainActivityFragmentManager.instance!!.fragments) {
-            if(f != null) {
-                if(!f.tag?.equals(fragment.tag)!!) {
+        val fragments: ArrayList<Fragment> =
+            ArrayList(MainActivityFragmentManager.instance?.fragments)
+        Log.d(TAG, "showFragment: $fragments")
+        for (f: Fragment in fragments) {
+            if (f != null) {
+                if (!f.tag?.equals(fragment.tag)!!) {
                     val t: FragmentTransaction = supportFragmentManager.beginTransaction()
                     t.hide(f)
                     t.commit()
@@ -70,14 +76,17 @@ class MainActivity : AppCompatActivity(), IMainActivity, ICategorySelector {
     }
 
     override fun onBackPressed() {
-        val fragments: ArrayList<Fragment> = MainActivityFragmentManager.instance!!.fragments
-        if(fragments.size > 1) {
+        val fragments: ArrayList<Fragment> =
+            ArrayList(MainActivityFragmentManager.instance!!.fragments)
+        if (fragments.size > 1) {
             val transaction = supportFragmentManager.beginTransaction()
             transaction.remove(fragments[fragments.size - 1])
             transaction.commit()
 
             MainActivityFragmentManager.instance!!.removeFragment(fragments.size - 1)
             showFragment(fragments[fragments.size - 2], true)
+        } else {
+            MainActivityFragmentManager.instance!!.removeFragment(fragments.size - 1)
         }
         super.onBackPressed()
     }
@@ -90,9 +99,12 @@ class MainActivity : AppCompatActivity(), IMainActivity, ICategorySelector {
         progress_bar.visibility = View.VISIBLE
     }
 
-    override fun onArtistSelected(position: Int) {
-        /* supportFragmentManager.beginTransaction()
-             .replace(R.id.main_container, CategoryFragment().newInstance())
-             .commit()*/
+    override fun onCategorySelected(category: String) {
+        loadFragment(CategoryFragment().newInstance(category), true)
     }
+
+    override fun onArtistSelected(category: String, artist: Artist) {
+        loadFragment(PlaylistFragment().newInstance(category, artist), true)
+    }
+
 }

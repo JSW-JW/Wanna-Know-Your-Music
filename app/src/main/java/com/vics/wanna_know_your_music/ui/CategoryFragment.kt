@@ -118,6 +118,8 @@ class CategoryFragment : Fragment(), ICategorySelector {
     }
 
     override fun onArtistSelected(position: Int) {
-        mICategorySelector.onArtistSelected(position)
+        mSelectedCategory?.let { selectedCategory ->
+            mIMainActivity.onArtistSelected(selectedCategory, mArtists[position])
+        }
     }
 }

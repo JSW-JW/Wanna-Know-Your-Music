@@ -86,7 +86,7 @@ class HomeFragment : Fragment(), HomeRecyclerAdapter.IHomeSelector {
 
     override fun onCategorySelected(position: Int) {
         Log.d(TAG, "onCategorySelected: Category list item is clicked.")
-
+        mIMainActivity.onCategorySelected(mCategories[position])
     }
 
     override fun onAttach(context: Context) {
