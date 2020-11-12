@@ -24,28 +24,49 @@ class MainActivity : AppCompatActivity(), IMainActivity, ICategorySelector {
 
     }
 
-    private fun loadFragment(fragment: Fragment, lateralMovement: Boolean){
+    private fun loadFragment(fragment: Fragment, lateralMovement: Boolean) {
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
         var tag: String? = null
 
-        if(lateralMovement) {
+        if (lateralMovement) {
             transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
         }
 
-        if(fragment is HomeFragment) {
+        if (fragment is HomeFragment) {
             tag = getString(R.string.fragment_home)
-        }
-        else if(fragment is CategoryFragment) {
+        } else if (fragment is CategoryFragment) {
             tag = getString(R.string.fragment_category)
-        }
-        else if(fragment is PlaylistFragment) {
+        } else if (fragment is PlaylistFragment) {
             tag = getString(R.string.fragment_playlist)
         }
 
         transaction.add(R.id.main_container, fragment, tag)
         transaction.commit()
 
-        MainActivityFragmentManager().getInstance().addFragment(fragment)
+        MainActivityFragmentManager.instance!!.addFragment(fragment)
+
+        showFragment(fragment, false)
+    }
+
+    private fun showFragment(fragment: Fragment, backwardsMovement: Boolean) {
+        val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+
+        if (backwardsMovement) {
+            transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right)
+        }  // flag to execute animation
+
+        transaction.show(fragment)  // let the fragment which exists to be at the front
+        transaction.commit()
+
+        for(f: Fragment in MainActivityFragmentManager.instance!!.fragments) {
+            if(f != null) {
+                if(!f.tag?.equals(fragment.tag)!!) {
+                    val t: FragmentTransaction = supportFragmentManager.beginTransaction()
+                    t.hide(f)
+                    t.commit()
+                }
+            }
+        }
     }
 
     override fun hideProgressBar() {
@@ -57,8 +78,8 @@ class MainActivity : AppCompatActivity(), IMainActivity, ICategorySelector {
     }
 
     override fun onArtistSelected(position: Int) {
-       /* supportFragmentManager.beginTransaction()
-            .replace(R.id.main_container, CategoryFragment().newInstance())
-            .commit()*/
+        /* supportFragmentManager.beginTransaction()
+             .replace(R.id.main_container, CategoryFragment().newInstance())
+             .commit()*/
     }
 }

@@ -3,33 +3,32 @@ package com.vics.wanna_know_your_music.util
 import androidx.fragment.app.Fragment
 
 class MainActivityFragmentManager {
-    private var mFragments: ArrayList<Fragment> = ArrayList()
-    private var instance: MainActivityFragmentManager? = null
-
-    fun getInstance(): MainActivityFragmentManager {
-        if(instance == null) {
-            instance = MainActivityFragmentManager()
-        }
-        return instance as MainActivityFragmentManager
-    }
+    val fragments: ArrayList<Fragment> = ArrayList()
 
     fun addFragment(fragment: Fragment) {
-        mFragments.add(fragment)
+        fragments.add(fragment)
     }
 
-    fun removeFragment(fragment: Fragment) {
-        mFragments.remove(fragment)
+    fun removeFragment(fragment: Fragment?) {
+        fragments.remove(fragment)
     }
 
     fun removeFragment(position: Int) {
-        mFragments.removeAt(position)
-    }
-
-    fun getFragments(): ArrayList<Fragment> {
-        return mFragments
+        fragments.removeAt(position)
     }
 
     fun removeAllFragments() {
-        mFragments.clear()
+        fragments.clear()
+    }
+
+    companion object {
+        var instance: MainActivityFragmentManager? = null
+            get() {
+                if (field == null) {
+                    field = MainActivityFragmentManager()
+                }
+                return field
+            }
+            private set
     }
 }
