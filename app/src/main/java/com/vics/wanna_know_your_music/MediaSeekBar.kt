@@ -16,6 +16,11 @@ import androidx.appcompat.widget.AppCompatSeekBar
  * media.
  */
 class MediaSeekBar : AppCompatSeekBar {
+
+    companion object {
+        private const val TAG = "MediaSeekBar"
+    }
+
     private var mMediaController: MediaControllerCompat? = null
     private var mControllerCallback: ControllerCallback? = null
     var isTracking = false
@@ -90,7 +95,7 @@ class MediaSeekBar : AppCompatSeekBar {
                 TAG,
                 "onPlaybackStateChanged: CALLED: playback state: $state"
             )
-            val progress = state?.position?.toInt() ?: 0
+            val progress = state.position.toInt() ?: 0
             setProgress(progress)
         }
 
@@ -99,7 +104,4 @@ class MediaSeekBar : AppCompatSeekBar {
         }
     }
 
-    companion object {
-        private const val TAG = "MediaSeekBar"
-    }
 }
