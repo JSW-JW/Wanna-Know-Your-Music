@@ -45,6 +45,12 @@ class CategoryFragment : Fragment(), ICategorySelector {
         }
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        if(!hidden) {
+            mIMainActivity.setActionBarTitle(mSelectedCategory!!)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -58,6 +64,7 @@ class CategoryFragment : Fragment(), ICategorySelector {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mIMainActivity.setActionBarTitle(mSelectedCategory!!)
         initRecyclerView(view)
     }
 

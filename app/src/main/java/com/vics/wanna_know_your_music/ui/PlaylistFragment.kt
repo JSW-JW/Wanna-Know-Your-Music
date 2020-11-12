@@ -48,6 +48,14 @@ class PlaylistFragment : Fragment(), IMediaSelector {
         }
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        if(!hidden) {
+            if(mSelectedArtist?.title != null) {
+                mIMainActivity.setActionBarTitle(mSelectedArtist?.title!!)
+            }
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,6 +65,9 @@ class PlaylistFragment : Fragment(), IMediaSelector {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if(mSelectedArtist?.title != null) {
+            mIMainActivity.setActionBarTitle(mSelectedArtist?.title!!)
+        }
 
         initRecyclerView()
     }

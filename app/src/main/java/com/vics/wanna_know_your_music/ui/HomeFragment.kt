@@ -41,9 +41,16 @@ class HomeFragment : Fragment(), HomeRecyclerAdapter.IHomeSelector {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        if(!hidden) {
+            mIMainActivity.setActionBarTitle(getString(R.string.categories))
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initRecyclerView(view)
         Log.d(TAG, "onViewCreated: here")
+        mIMainActivity.setActionBarTitle(getString(R.string.categories))
     }
 
     private fun retrieveCategories() {

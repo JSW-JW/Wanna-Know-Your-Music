@@ -107,4 +107,8 @@ class MainActivity : AppCompatActivity(), IMainActivity {
         loadFragment(PlaylistFragment().newInstance(category, artist), true)
     }
 
+    override fun setActionBarTitle(title: String) {
+        supportActionBar?.title = title
+    }
+
 }

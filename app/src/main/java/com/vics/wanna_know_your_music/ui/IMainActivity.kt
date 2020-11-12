@@ -11,4 +11,6 @@ interface IMainActivity {
     fun onCategorySelected(category: String)
 
     fun onArtistSelected(category: String, artist: Artist)
+
+    fun setActionBarTitle(title: String)
 }
