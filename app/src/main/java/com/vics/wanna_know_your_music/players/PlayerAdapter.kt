@@ -71,7 +71,7 @@ abstract class PlayerAdapter(context: Context) {
     abstract fun setVolume(volume: Float)
 
     companion object {
-        private const val TAG = "PlayerAdapter"
+        const val TAG = "PlayerAdapter"
         private const val MEDIA_VOLUME_DEFAULT = 1.0f
         private const val MEDIA_VOLUME_DUCK = 0.2f
 
