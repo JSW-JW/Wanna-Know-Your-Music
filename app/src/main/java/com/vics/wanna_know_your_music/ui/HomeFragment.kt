@@ -42,7 +42,7 @@ class HomeFragment : Fragment(), HomeRecyclerAdapter.IHomeSelector {
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
-        if(!hidden) {
+        if (!hidden) {
             mIMainActivity.setActionBarTitle(getString(R.string.categories))
         }
     }
@@ -81,12 +81,14 @@ class HomeFragment : Fragment(), HomeRecyclerAdapter.IHomeSelector {
     }
 
     private fun initRecyclerView(view: View) {
-        if (mRecyclerView == null) {
-            Log.d(TAG, "initRecyclerView: here")
-            mRecyclerView = view?.findViewById(R.id.recycler_view)
-            mRecyclerView?.layoutManager = LinearLayoutManager(activity)
-            mAdapter = HomeRecyclerAdapter(mCategories, mContext, this)
-            mRecyclerView!!.adapter = mAdapter
+        Log.d(TAG, "initRecyclerView: here")
+        mRecyclerView = view?.findViewById(R.id.recycler_view)
+        mRecyclerView?.layoutManager = LinearLayoutManager(activity)
+        mAdapter = HomeRecyclerAdapter(mCategories, mContext, this)
+        mRecyclerView!!.adapter = mAdapter
+        retrieveCategories()
+
+        if (mCategories.size == 0) {
             retrieveCategories()
         }
     }

@@ -87,7 +87,10 @@ class PlaylistFragment : Fragment(), IMediaSelector {
         mRecyclerView.layoutManager = LinearLayoutManager(mContext)
         mAdapter = PlaylistRecyclerAdapter(mContext, mMediaList, this)
         mRecyclerView.adapter = mAdapter
-        retrieveMedia()
+
+        if(mMediaList.size == 0) {
+            retrieveMedia()
+        }
     }
 
     private fun retrieveMedia() {

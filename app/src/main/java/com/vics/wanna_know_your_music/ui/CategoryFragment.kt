@@ -115,7 +115,10 @@ class CategoryFragment : Fragment(), ICategorySelector {
         mRecyclerView.layoutManager = LinearLayoutManager(mContext)
         mAdapter = CategoryRecyclerAdapter(mContext, mArtists, mICategorySelector)
         mRecyclerView.adapter = mAdapter
-        retrieveArtists()
+
+        if(mArtists.size == 0) {
+            retrieveArtists() // artists data will be left even if configuration changes
+        }
     }
 
     override fun onAttach(context: Context) {

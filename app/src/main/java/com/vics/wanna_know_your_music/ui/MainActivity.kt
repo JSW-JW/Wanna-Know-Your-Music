@@ -85,8 +85,6 @@ class MainActivity : AppCompatActivity(), IMainActivity {
 
             MainActivityFragmentManager.instance!!.removeFragment(fragments.size - 1)
             showFragment(fragments[fragments.size - 2], true)
-        } else {
-            MainActivityFragmentManager.instance!!.removeFragment(fragments.size - 1)
         }
         super.onBackPressed()
     }
