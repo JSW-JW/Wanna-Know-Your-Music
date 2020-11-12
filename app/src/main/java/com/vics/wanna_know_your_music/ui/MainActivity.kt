@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentTransaction
 import com.vics.WannaKnowYourMusic.R
 import com.vics.wanna_know_your_music.adapters.CategoryRecyclerAdapter.ICategorySelector
 import com.vics.wanna_know_your_music.models.Artist
+import com.vics.wanna_know_your_music.util.MainActivityFragmentManager
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -20,7 +21,7 @@ class MainActivity : AppCompatActivity(), IMainActivity, ICategorySelector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        loadFragment(HomeFragment().newInstance(), true)
+
     }
 
     private fun loadFragment(fragment: Fragment, lateralMovement: Boolean){
@@ -43,6 +44,8 @@ class MainActivity : AppCompatActivity(), IMainActivity, ICategorySelector {
 
         transaction.add(R.id.main_container, fragment, tag)
         transaction.commit()
+
+        MainActivityFragmentManager().getInstance().addFragment(fragment)
     }
 
     override fun hideProgressBar() {
