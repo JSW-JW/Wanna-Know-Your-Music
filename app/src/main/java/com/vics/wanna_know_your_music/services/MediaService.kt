@@ -1,13 +1,18 @@
 package com.vics.wanna_know_your_music.services
 
 import android.content.Intent
+import android.media.session.MediaSession
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
+import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.text.TextUtils
 import android.util.Log
 import androidx.media.MediaBrowserServiceCompat
+import com.google.api.LogDescriptor
+import com.vics.wanna_know_your_music.players.MediaPlayerAdapter
+import com.vics.wanna_know_your_music.players.PlayerAdapter
 
 
 class MediaService : MediaBrowserServiceCompat() {
@@ -15,6 +20,8 @@ class MediaService : MediaBrowserServiceCompat() {
         private const val TAG = "MediaService"
     }
     private var mSession: MediaSessionCompat? = null
+    private var mPlayback: PlayerAdapter? = null
+
     override fun onCreate() {
         super.onCreate()
 
@@ -31,11 +38,13 @@ class MediaService : MediaBrowserServiceCompat() {
 
         // A token that can be used to create a MediaController for this session
         sessionToken = mSession!!.sessionToken
+        mPlayback = MediaPlayerAdapter(this)
     }
 
     override fun onTaskRemoved(rootIntent: Intent) {
         Log.d(TAG, "onTaskRemoved: stopped")
         super.onTaskRemoved(rootIntent)
+        mPlayback?.stop()
         stopSelf()
     }
 
@@ -73,44 +82,82 @@ class MediaService : MediaBrowserServiceCompat() {
     }
 
     inner class MediaSessionCallback : MediaSessionCompat.Callback() {
+
+        private val mPlaylist: ArrayList<MediaSessionCompat.QueueItem> = ArrayList()
+        private var mPreparedMedia: MediaMetadataCompat? = null
+        private var mQueueIndex = -1
+
         override fun onPrepare() {
-            super.onPrepare()
+            if(mQueueIndex < 0 && mPlaylist.isEmpty()) {
+                return
+            }
+
+            mPreparedMedia = null // TODO: need to retrieve the selected media here.
+
+            if((mSession?.isActive) == false) {
+                mSession?.isActive = true
+            }
         }
 
         override fun onPlayFromMediaId(mediaId: String, extras: Bundle) {
-            super.onPrepareFromMediaId(mediaId, extras)
+            Log.d(TAG, "onPlayFromMediaId: Called.")
         }
 
         override fun onPlay() {
-            super.onPlay()
+            if(!isReadyToPlay()) {
+                return
+            }
+            if(mPreparedMedia == null){
+                onPrepare()
+            }
+
+            mPlayback?.playFromMedia(mPreparedMedia)
         }
 
         override fun onPause() {
-            super.onPause()
+            mPlayback?.pause()
         }
 
         override fun onSkipToNext() {
-            super.onSkipToNext()
+            Log.d(TAG, "onSkipToNext: SKIP TO NEXT")
+            mQueueIndex = (++mQueueIndex % mPlaylist.size)
+            Log.d(TAG, "onSkipToNext: queue index: $mQueueIndex")
+            onPlay()
         }
 
         override fun onSkipToPrevious() {
-            super.onSkipToPrevious()
+            Log.d(TAG, "onSkipToPrevious: SKIP TO PREVIOUS")
+
+            mQueueIndex = if(mQueueIndex > 0) mQueueIndex -1 else mPlaylist.size - 1
+            mPreparedMedia = null
+            onPlay()
         }
 
         override fun onStop() {
-            super.onStop()
+            mPlayback?.stop()
+            mSession?.isActive = false
         }
 
         override fun onSeekTo(pos: Long) {
-            super.onSeekTo(pos)
+            mPlayback?.seekTo(pos)
         }
 
         override fun onAddQueueItem(description: MediaDescriptionCompat) {
-            super.onAddQueueItem(description)
+            Log.d(TAG, "onAddQueueItem: called: position in list: ${mPlaylist.size}")
+            mPlaylist.add(MediaSessionCompat.QueueItem(description, description.hashCode().toLong()))
+            mQueueIndex = if(mQueueIndex == -1) 0 else mQueueIndex
+            mSession?.setQueue(mPlaylist)
         }
 
         override fun onRemoveQueueItem(description: MediaDescriptionCompat) {
-            super.onRemoveQueueItem(description)
+            Log.d(TAG, "onRemoveQueueItem: called: position in list: ${mPlaylist.size}")
+            mPlaylist.remove(MediaSessionCompat.QueueItem(description, description.hashCode().toLong()))
+            mQueueIndex = if(mPlaylist.isEmpty()) -1 else mQueueIndex
+            mSession?.setQueue(mPlaylist)
+        }
+
+        private fun isReadyToPlay(): Boolean {
+            return (mPlaylist.isNotEmpty())
         }
     }
 
