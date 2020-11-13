@@ -3,12 +3,15 @@ package com.vics.wanna_know_your_music.ui
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.vics.WannaKnowYourMusic.R
 import com.vics.wanna_know_your_music.adapters.CategoryRecyclerAdapter.ICategorySelector
+import com.vics.wanna_know_your_music.client.MediaBrowserHelper
 import com.vics.wanna_know_your_music.models.Artist
+import com.vics.wanna_know_your_music.services.MediaService
 import com.vics.wanna_know_your_music.util.MainActivityFragmentManager
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -17,11 +20,29 @@ class MainActivity : AppCompatActivity(), IMainActivity {
 
     private val TAG = "MainActivity"
 
+    // UI Components
+    private var mProgressBar: ProgressBar? = null
+
+    // Vars
+    private var mMediaBrowserHelper: MediaBrowserHelper? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        mMediaBrowserHelper = MediaBrowserHelper(this, MediaService::class.java)
+
         loadFragment(HomeFragment().newInstance(), true)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mMediaBrowserHelper?.onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mMediaBrowserHelper?.onStop()
     }
 
     private fun loadFragment(fragment: Fragment, lateralMovement: Boolean) {
