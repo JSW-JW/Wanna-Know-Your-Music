@@ -35,6 +35,17 @@ class MainActivity : AppCompatActivity(), IMainActivity {
         loadFragment(HomeFragment().newInstance(), true)
     }
 
+    private var mIsPlaying: Boolean = false
+    override fun playPause() {
+        if(mIsPlaying) {
+            mMediaBrowserHelper?.transportControls()?.skipToNext()
+        }
+        else {
+            mMediaBrowserHelper?.transportControls()?.play()
+            mIsPlaying = true
+        }
+    }
+
     override fun onStart() {
         super.onStart()
         mMediaBrowserHelper?.onStart()

@@ -74,7 +74,12 @@ class MediaPlayerAdapter(context: Context) : PlayerAdapter(context) {
 
         }
     }
-    override fun playFromMedia(metadata: MediaMetadataCompat?) {}
+    override fun playFromMedia(metadata: MediaMetadataCompat?) {
+        startTrackingPlayback()
+        metadata?.let { metadata ->
+            playFile(metadata)
+        }
+    }
     override val currentMedia: MediaMetadataCompat?
         get() = mCurrentMedia
 

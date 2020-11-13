@@ -17,6 +17,12 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+
     }
 
     buildTypes {
@@ -54,5 +60,8 @@ dependencies {
 
     // Firestore
     implementation 'com.google.firebase:firebase-firestore:22.0.0'
+
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
 }
 

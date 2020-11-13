@@ -17,6 +17,10 @@ class MediaLibrary {
         }
     }
 
+    init {
+        initMap()
+    }
+
     val treeMap: TreeMap<String, MediaMetadataCompat>
         get() = mMediaMap
 
@@ -123,7 +127,4 @@ class MediaLibrary {
         )
     }
 
-    init {
-        initMap()
-    }
 }

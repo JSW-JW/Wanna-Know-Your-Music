@@ -1,7 +1,6 @@
 package com.vics.wanna_know_your_music.services
 
 import android.content.Intent
-import android.media.session.MediaSession
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
@@ -10,9 +9,9 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.text.TextUtils
 import android.util.Log
 import androidx.media.MediaBrowserServiceCompat
-import com.google.api.LogDescriptor
 import com.vics.wanna_know_your_music.players.MediaPlayerAdapter
 import com.vics.wanna_know_your_music.players.PlayerAdapter
+import com.vics.wanna_know_your_music.util.MediaLibrary
 
 
 class MediaService : MediaBrowserServiceCompat() {
@@ -21,6 +20,7 @@ class MediaService : MediaBrowserServiceCompat() {
     }
     private var mSession: MediaSessionCompat? = null
     private var mPlayback: PlayerAdapter? = null
+    private var mMediaLibrary: MediaLibrary? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -39,6 +39,7 @@ class MediaService : MediaBrowserServiceCompat() {
         // A token that can be used to create a MediaController for this session
         sessionToken = mSession!!.sessionToken
         mPlayback = MediaPlayerAdapter(this)
+        mMediaLibrary = MediaLibrary()
     }
 
     override fun onTaskRemoved(rootIntent: Intent) {
@@ -63,6 +64,7 @@ class MediaService : MediaBrowserServiceCompat() {
     ): BrowserRoot? {
         if (s == applicationContext.packageName) {
             // Allowed to browse media
+            return BrowserRoot("some_fake_playlist", null)
         }
         return BrowserRoot("empty_media", null) // return no media
     }
@@ -78,7 +80,7 @@ class MediaService : MediaBrowserServiceCompat() {
             result.sendResult(null)
             return
         }
-        result.sendResult(null) // return all available media
+        result.sendResult(MediaLibrary.mediaItems) // return all available media
     }
 
     inner class MediaSessionCallback : MediaSessionCompat.Callback() {
@@ -91,8 +93,11 @@ class MediaService : MediaBrowserServiceCompat() {
             if(mQueueIndex < 0 && mPlaylist.isEmpty()) {
                 return
             }
+            val mediaId = mPlaylist[mQueueIndex].description.mediaId
+            mPreparedMedia = mMediaLibrary!!.treeMap[mediaId]
+            mSession!!.setMetadata(mPreparedMedia)
 
-            mPreparedMedia = null // TODO: need to retrieve the selected media here.
+            // TODO: need to retrieve the selected media here.
 
             if((mSession?.isActive) == false) {
                 mSession?.isActive = true
@@ -105,6 +110,7 @@ class MediaService : MediaBrowserServiceCompat() {
 
         override fun onPlay() {
             if(!isReadyToPlay()) {
+                Log.d(TAG, "onPlay: Returned")
                 return
             }
             if(mPreparedMedia == null){
@@ -112,6 +118,7 @@ class MediaService : MediaBrowserServiceCompat() {
             }
 
             mPlayback?.playFromMedia(mPreparedMedia)
+            Log.d(TAG, "MediaService: playFromMedia: Called")
         }
 
         override fun onPause() {
@@ -143,8 +150,8 @@ class MediaService : MediaBrowserServiceCompat() {
         }
 
         override fun onAddQueueItem(description: MediaDescriptionCompat) {
-            Log.d(TAG, "onAddQueueItem: called: position in list: ${mPlaylist.size}")
             mPlaylist.add(MediaSessionCompat.QueueItem(description, description.hashCode().toLong()))
+            Log.d(TAG, "onAddQueueItem: called: position in list: ${mPlaylist.size}")
             mQueueIndex = if(mQueueIndex == -1) 0 else mQueueIndex
             mSession?.setQueue(mPlaylist)
         }

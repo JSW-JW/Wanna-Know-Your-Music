@@ -20,6 +20,7 @@ class MediaControllerFragment : Fragment() {
     private lateinit var mPlayPause: ImageView
     private lateinit var mContext: Context
     private lateinit var mSongTitle: TextView
+    private lateinit var mIMainActivity: IMainActivity
 
     companion object {
         private const val TAG = "MediaControllerFragment"
@@ -44,7 +45,9 @@ class MediaControllerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mPlayPause = play_pause
 
-        mPlayPause.setOnClickListener {  }
+        mPlayPause.setOnClickListener {
+            mIMainActivity.playPause()
+        }
     }
 
     fun setIsPlaying(isPlaying: Boolean) {
@@ -67,5 +70,6 @@ class MediaControllerFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
+        mIMainActivity = context as IMainActivity
     }
 }
