@@ -8,13 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.vics.WannaKnowYourMusic.R
-import com.vics.wanna_know_your_music.adapters.CategoryRecyclerAdapter.ICategorySelector
 import com.vics.wanna_know_your_music.client.MediaBrowserHelper
 import com.vics.wanna_know_your_music.models.Artist
 import com.vics.wanna_know_your_music.services.MediaService
 import com.vics.wanna_know_your_music.util.MainActivityFragmentManager
 import kotlinx.android.synthetic.main.activity_main.*
-
 
 class MainActivity : AppCompatActivity(), IMainActivity {
 
@@ -33,7 +31,9 @@ class MainActivity : AppCompatActivity(), IMainActivity {
         mMediaBrowserHelper = MediaBrowserHelper(this, MediaService::class.java)
 
         loadFragment(HomeFragment().newInstance(), true)
+
     }
+
 
     private var mIsPlaying: Boolean = false
     override fun playPause() {
